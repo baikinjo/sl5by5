@@ -55,7 +55,6 @@ function App() {
 
   useEffect(() => {
     setProgram(dataPoints);
-    setPlan(dataPoints[0].days[0]);
   }, []);
 
   useEffect(() => {
@@ -205,7 +204,7 @@ function App() {
                   <Box
                     key={e.exercise}
                     p="20px"
-                    bg={colorMode === "light" ? "gray.100" : "purple.600"}
+                    bg={colorMode === "light" ? "gray.100" : "gray.600"}
                     borderRadius="10px"
                     display="flex"
                     alignItems="center"
@@ -228,7 +227,7 @@ function App() {
                     </Box>
                     <CircularProgress
                       onClick={() => incrementReps(idx)}
-                      color="green.400"
+                      color={colorMode === "light" ? "green.400" : "purple.200"}
                       value={reps[idx]}
                       size="90px"
                     >
@@ -255,23 +254,25 @@ function App() {
                 </NumberInput>
                 <IconButton
                   onClick={toggleTime}
-                  ml="8px"
-                  colorScheme={active ? "red" : "green"}
+                  ml={2}
+                  colorScheme={
+                    active ? "red" : colorMode === "light" ? "green" : "purple"
+                  }
                   aria-label={active ? "stop" : "start"}
                   icon={active ? <NotAllowedIcon /> : <TimeIcon />}
                 />
                 <IconButton
                   onClick={resetTime}
-                  ml="8px"
+                  ml={2}
                   aria-label="reset"
                   icon={<RepeatClockIcon />}
                 />
                 <Progress
-                  ml="8px"
+                  ml={2}
                   value={time}
                   max={initialTime}
                   w="65%"
-                  colorScheme="green"
+                  colorScheme={colorMode === "light" ? "green" : "purple"}
                 />
               </Flex>
             </>
