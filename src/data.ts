@@ -16,7 +16,6 @@ export interface Program {
   days: Day[];
 }
 
-
 let last = 0;
 export const program: Program[] = [];
 
@@ -79,20 +78,20 @@ for (let i = 0; i < 12; i++) {
       exercises.push({
         exercise,
         reps,
-        weight
+        weight,
       });
     }
     days.push({
       dayNumber: last,
       plan,
       day,
-      exercises
+      exercises,
     });
     last++;
   }
   program.push({
     week,
-    days
+    days,
   });
 }
 
@@ -109,6 +108,23 @@ export const convertExerciseName = (name: string) => {
     case "deadlift":
       return "Deadlift";
     default:
-      throw Error(`Unknown name: $name`);
+      return "";
+  }
+};
+
+export const exerciseMedia = (name: string) => {
+  switch (name) {
+    case "squat":
+      return "https://stronglifts.com/wp-content/uploads/how-to-squat.webp";
+    case "bench_press":
+      return "https://stronglifts.com/wp-content/uploads/how-to-bench-press.webp";
+    case "barbell_row":
+      return "https://stronglifts.com/wp-content/uploads/how-to-barbell-row.webp";
+    case "oh_press":
+      return "https://stronglifts.com/wp-content/uploads/how-to-overhead-press.webp";
+    case "deadlift":
+      return "https://stronglifts.com/wp-content/uploads/how-to-deadlift.webp";
+    default:
+      return "";
   }
 };

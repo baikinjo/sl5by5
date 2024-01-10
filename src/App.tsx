@@ -1,10 +1,18 @@
 import {
   Box,
+  Button,
   CircularProgress,
   CircularProgressLabel,
   Container,
   Flex,
   IconButton,
+  Image,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   NumberInput,
   NumberInputField,
   Progress,
@@ -12,15 +20,25 @@ import {
   SimpleGrid,
   Spinner,
   Stack,
+  useColorMode,
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   Day,
   Program,
   convertExerciseName,
   program as dataPoints,
+  exerciseMedia,
 } from "./data";
 import { useEffect, useState } from "react";
-import { NotAllowedIcon, RepeatClockIcon, TimeIcon } from "@chakra-ui/icons";
+import {
+  InfoOutlineIcon,
+  MoonIcon,
+  NotAllowedIcon,
+  RepeatClockIcon,
+  SunIcon,
+  TimeIcon,
+} from "@chakra-ui/icons";
 
 function App() {
   const [program, setProgram] = useState<Program[]>([]);
@@ -31,9 +49,13 @@ function App() {
   const [time, setTime] = useState(90);
   const [initialTime, setInitialTime] = useState(90);
   const [active, setActive] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   useEffect(() => {
     setProgram(dataPoints);
+    setPlan(dataPoints[0].days[0]);
   }, []);
 
   useEffect(() => {
@@ -94,22 +116,63 @@ function App() {
     setInitialTime(vn);
   };
 
+  const handleModalOpen = (exercise: string) => {
+    setSelectedExercise(exercise);
+    onOpen();
+  };
+
+  const handleModalClose = () => {
+    setSelectedExercise("");
+    onClose();
+  };
+
   return (
     <Container centerContent p="20px">
       {program.length === 0 ? (
         <Spinner />
       ) : (
         <>
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader textTransform="uppercase">
+                {convertExerciseName(selectedExercise)}
+              </ModalHeader>
+              <ModalBody>
+                <Image
+                  src={exerciseMedia(selectedExercise)}
+                  alt={selectedExercise}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme="green" onClick={handleModalClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
           <Stack spacing={3} w="100%">
-            <Select
-              placeholder="Select Week"
-              value={week}
-              onChange={handleWeekChange}
-            >
-              {program.map((p) => (
-                <option key={p.week} value={p.week}>{`Week ${p.week}`}</option>
-              ))}
-            </Select>
+            <Flex>
+              <Select
+                placeholder="Select Week"
+                value={week}
+                onChange={handleWeekChange}
+              >
+                {program.map((p) => (
+                  <option
+                    key={p.week}
+                    value={p.week}
+                  >{`Week ${p.week}`}</option>
+                ))}
+              </Select>
+              <IconButton
+                variant="outline"
+                aria-label="toggleColor"
+                icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+                ml={1}
+                onClick={toggleColorMode}
+              />
+            </Flex>
             {!!week && (
               <Select
                 placeholder="Select Day"
@@ -142,16 +205,24 @@ function App() {
                   <Box
                     key={e.exercise}
                     p="20px"
-                    bg="gray.100"
+                    bg={colorMode === "light" ? "gray.100" : "purple.600"}
                     borderRadius="10px"
                     display="flex"
                     alignItems="center"
                     justifyContent="space-between"
                   >
                     <Box>
-                      <Box fontWeight="bold" fontSize="large">
-                        {convertExerciseName(e.exercise)}
-                      </Box>
+                      <Flex
+                        fontWeight="bold"
+                        fontSize="large"
+                        alignItems="center"
+                      >
+                        {convertExerciseName(e.exercise)}{" "}
+                        <InfoOutlineIcon
+                          onClick={() => handleModalOpen(e.exercise)}
+                          ml="8px"
+                        />
+                      </Flex>
                       <Box>{e.weight}lb</Box>
                       <Box>{e.reps}</Box>
                     </Box>
