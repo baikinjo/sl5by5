@@ -1,23 +1,7 @@
-interface Exercise {
-  exercise: string;
-  reps: string;
-  weight: number;
-}
-
-export interface Day {
-  dayNumber: number;
-  plan: string;
-  day: string;
-  exercises: Exercise[];
-}
-
-export interface Program {
-  week: number;
-  days: Day[];
-}
+import { Program } from "./types";
 
 let last = 0;
-export const program: Program[] = [];
+export const dataPoints: Program[] = [];
 
 const getWeight = (name: string, day: number): number => {
   let start = day >= 29 ? 157.5 : 90;
@@ -89,42 +73,8 @@ for (let i = 0; i < 12; i++) {
     });
     last++;
   }
-  program.push({
+  dataPoints.push({
     week,
     days,
   });
 }
-
-export const convertExerciseName = (name: string) => {
-  switch (name) {
-    case "squat":
-      return "Squat";
-    case "bench_press":
-      return "Bench Press";
-    case "barbell_row":
-      return "Barbell Row";
-    case "oh_press":
-      return "Overhead Press";
-    case "deadlift":
-      return "Deadlift";
-    default:
-      return "";
-  }
-};
-
-export const exerciseMedia = (name: string) => {
-  switch (name) {
-    case "squat":
-      return "https://stronglifts.com/wp-content/uploads/how-to-squat.webp";
-    case "bench_press":
-      return "https://stronglifts.com/wp-content/uploads/how-to-bench-press.webp";
-    case "barbell_row":
-      return "https://stronglifts.com/wp-content/uploads/how-to-barbell-row.webp";
-    case "oh_press":
-      return "https://stronglifts.com/wp-content/uploads/how-to-overhead-press.webp";
-    case "deadlift":
-      return "https://stronglifts.com/wp-content/uploads/how-to-deadlift.webp";
-    default:
-      return "";
-  }
-};
