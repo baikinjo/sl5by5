@@ -73,7 +73,9 @@ export const PlanDisplay = ({
                     ml="8px"
                   />
                 </Flex>
-                <Box>{e.weight}lb</Box>
+                <Box>
+                  {e.weight}lb | {(e.weight - 45) / 2}lb per plate
+                </Box>
                 <Box>{e.reps}</Box>
               </Box>
               <CircularProgress
